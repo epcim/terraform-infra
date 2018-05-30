@@ -27,46 +27,49 @@ variable "pool" {
 
 
 # PROVIDER
-# FIXME, rename to os_username, ...
-variable "openstack_username" {
+variable "os_username" {
   description = "OpenStack auth user username"
   default     = "pmichalec"
 }
 
-variable "openstack_password" {
+variable "os_password" {
   description = "OpenStack auth user password"
   default     = "REDACTED"
 }
 
-variable "openstack_project" {
+variable "os_tenant" {
   description = "OpenStack auth project"
   default     = "pmichalec"
 }
 
-variable "openstack_domain" {
+variable "os_project" {
+  description = "OpenStack auth project"
+  default     = "pmichalec"
+}
+
+variable "os_domain" {
   description = "OpenStack auth domain"
   default     = "default"
 }
 
-variable "openstack_region" {
+variable "os_region" {
   description = "OpenStack auth region"
   default     = "RegionOne"
 }
 
-variable "openstack_auth_url" {
+variable "os_auth_url" {
   description = "OpenStack auth url/endpoint"
   default     = "https://lab.openstack.local:5000/v3"
 }
 
 
 # CUSTOM METADATA
-# FIXME, rename to tag_label, tag_cluster, tag_env
-variable "label" {
+variable "tag_label" {
   description = "Custom tag for the tf deployment, used as label/preffix"
   default  = "pmichalec"
 }
 
-variable "cluster" {
+variable "tag_cluster" {
   description = "Custom tag for the tf deployment cluster"
   default  = "habitat"
 }

@@ -1,5 +1,5 @@
 resource "openstack_compute_keypair_v2" "terraform" {
-  name       = "${var.label}_tf"
+  name       = "${var.tag_label}_tf"
   public_key = "${file("${var.ssh_key_file}.pub")}"
 }
 

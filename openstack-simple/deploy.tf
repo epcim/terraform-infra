@@ -14,7 +14,7 @@ resource "openstack_compute_instance_v2" "ctl" {
   name            = "${format("ctl%02d", count.index+1)}"
   image_name      = "${var.image}"
   flavor_name     = "${var.flavor}"
-  key_pair        = "${var.label}_tf"
+  key_pair        = "${var.tag_label}_tf"
   # mind other sec group: default, ...
   security_groups = ["${openstack_compute_secgroup_v2.ssh_only.name}"]
 

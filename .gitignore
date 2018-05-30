@@ -2,6 +2,7 @@
 .secrets
 .repos
 .workspace
+.terraform
 
 terraform
 
