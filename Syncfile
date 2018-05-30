@@ -1,0 +1,74 @@
+#!/bin/bash
+
+## Opinionated 3rd party repo syncer
+## Inspired by https://github.com/epcim/habitat-plans/blob/master/Planfile
+
+set -e
+
+P=./
+R=.repos
+declare -a FETCHED=()
+
+
+plans() {
+  # GITREPO [-b BRANCH] ORIGIN
+  use https://github.com/echohack/on-prem-builder.git -b terraform habitat-builder
+  use https://github.com/habitat-sh/ci-terraform.git habitat-ci
+
+
+  # PRE-FETCH CUSTOMIZATION
+  # stash uncommited changes
+  git stash
+  # fetch plans to upstream branch
+  git checkout -b upstream || git checkout upstream
+
+
+  # ORIGIN/FOLDER
+  get habitat-builder/terraform aws-habitat-builder
+  get habitat-ci aws-habitat-ci
+
+
+  # POST-FETCH CUSTOMIZATION
+  # commit to upstream branch and rebase master against it
+  ls -d ./*/ | xargs -n1 git add
+  git commit -am "Updates from upstream"
+  git checkout master
+  git rebase upstream
+  # apply work in-progress
+  git stash pop
+  # install community scripts, etc..
+  #cp -a .repos/**/**/.sh .
+}
+
+function use() {
+  repo=$1
+  name=$(basename ${@: -1})
+  if [ -e $R/$name ]; then
+    pushd $R/$name; pwd
+    git pull
+  else
+    mkdir -p $R && pushd $R
+    git clone $@
+  fi
+  popd
+}
+
+function get() {
+  plan=$1
+  name=${2:-$(basename $plan)}
+  if ! [[ "${FETCHED[*]}" =~ $name ]]; then
+    echo "# get $plan"
+    rsync -ah --exclude '.git' $R/$plan/* $P/$name || cp -a $R/$plan  $P/$name
+    FETCHED+=($name)
+  fi
+}
+
+pushd () {
+    command pushd "$@" > /dev/null
+}
+
+popd () {
+    command popd "$@" > /dev/null
+}
+
+plans

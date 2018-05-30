@@ -1,0 +1,9 @@
+
+.secrets
+.repos
+.workspace
+
+terraform
+
+*/*.tfstate*
+*/*.private*
