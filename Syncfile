@@ -31,7 +31,7 @@ plans() {
   # POST-FETCH CUSTOMIZATION
   # commit to upstream branch and rebase master against it
   ls -d ./*/ | xargs -n1 git add
-  git commit -am "Updates from upstream"
+  git commit -m "Updates from upstream" || true
   git checkout master
   git rebase upstream
   # apply work in-progress
