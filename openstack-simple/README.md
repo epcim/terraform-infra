@@ -1,4 +1,7 @@
 
+# Overivew
+
+Terraform plan for simple 3 node infrastructure with OpenStack provisioner.
 
 ## Tools required
 
@@ -20,8 +23,8 @@ Download your keystonerc/openrc and store as .envrc in your working directory
 Or manually::
 
 
-    OS_USERNAME=XYZ 
-    OS_PASSWORD=XYZ 
+    OS_USERNAME=XYZ
+    OS_PASSWORD=XYZ
     cat <<-EOF >> ./.envrc
     	# rc
     	export OS_AUTH_URL=https://lab.mirantis.com:5000/v3
@@ -105,4 +108,8 @@ Basic terraform commands:
 Note you may want to run content in `main.tf` independently, as these you might want to share these or keep them for next
 execution.
 
+
+## Contributing
+
+Community PR/Issues are warmly welcome.
 
