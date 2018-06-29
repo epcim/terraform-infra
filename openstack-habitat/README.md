@@ -1,0 +1,151 @@
+# Overivew
+
+Terraform plan for simple 3 node infrastructure with OpenStack provider
+
+## Tools required
+
+The tools and setup is opinionated and highly optional ;)
+
+### ubuntu
+
+    apt-get install -y direnv python-pipenv python-pip envtpl
+
+### container-linux transpiller
+
+    https://github.com/coreos/container-linux-config-transpiler/
+
+### universal template rendere
+
+    envtpl - jinja2 template rendering with shell environment variables
+
+## Setup OpenStack environment
+
+Download your keystonerc/openrc and store as .envrc in your working directory
+
+    #V2
+    https://lab.youropenstack.com/project/api_access/openrcv2/
+    #V3
+    https://lab.youropenstack.com/project/api_access/openrc/
+
+Or manually::
+
+
+    OS_USERNAME=XYZ
+    OS_PASSWORD=XYZ
+    cat <<-EOF >> ./.envrc
+    	# rc
+    	export OS_AUTH_URL=https://lab.mirantis.com:5000/v3
+    	export OS_PROJECT_ID=${OS_PROJECT_ID:-52536594831e4071b3e47fc2732235c9}
+    	export OS_PROJECT_NAME="${OS_PROJECT:-mirantis-services-eu}"
+    	export OS_USER_DOMAIN_NAME="default"
+    	export OS_USERNAME=${OS_USERNAME}
+    	export OS_PASSWORD=${OS_PASSWORD}
+    	export OS_REGION_NAME="RegionOne"
+    	export OS_INTERFACE=public
+    	export OS_IDENTITY_API_VERSION=3
+    	# use virtualenv
+    	pipenv --py && pipenv shell
+    EOF
+
+Install openstack client libs in isolated environment:
+
+    # first time only 
+    pipenv --three install python-openstackclient
+    direnv allow .
+
+    # later
+    pipenv shell
+    openstack project list
+    ...
+    openstack-inventory --list > inventory.json
+
+    # inspect with
+    jq -r  \
+         '.[]|"\(.location.region_name)@\(.location.project.name)@\(.key_name)@\(.properties."OS-EXT-SRV-ATTR:host")/\(.properties."OS-EXT-SRV-ATTR:instance_name")/\(.name|split(".")[0]) (\(.properties."OS-EXT-STS:vm_state"))"' \
+         inventory.json |column -t -s '@' | sort -k3
+
+
+## Configure Terraform provider
+
+Get IDs and Names of openstack objects
+
+    openstack image list
+    openstack flavor list
+    openstack network list
+    openstack network list --external # the gateway
+    openstack availability zone list
+    openstack security group list
+    ...
+
+And configure `variables.tf` and `provider.tf` as required.
+
+
+## Upload images
+
+      wget https://stable.release.core-os.net/amd64-usr/current/coreos_production_openstack_image.img.bz2
+      wget https://stable.release.flatcar-linux.net/amd64-usr/current/flatcar_production_openstack_image.img.bz2
+
+      # bunzip2 ./*bz2
+
+      glance image-create --name Container-Linux \
+        --container-format bare \
+        --disk-format qcow2 \
+        --file coreos_production_openstack_image.img \
+        --visibility public                 # optional
+
+
+
+## Customize
+
+The folder contains `main.tf` that creates base infrastructure (netwroks, routers, ssh keys, ...) for given deployment configured in `deploy.tf` (instances, floating ip).
+If `outputs.tf` exist, in this file you may control what Terraform will hold as a record after the states are applied.
+
+I am very fresh to terraform, but basically to share `main.tf` and `deploy.tf` with multiple instances I use `${var.tag_namespace}` and `${tag_env}`
+to set objects "tagged" with unique name per my deployment.
+
+## Deployment
+
+Basic terraform commands:
+
+    # first time (to download used plugins, etc..)
+    terraform init
+
+    # to review
+    terraform plan
+
+    # to execute (note, some are optional)
+    terraform apply \
+      -var "openstack_auth_url=$OS_AUTH_URL"\
+      -var "openstack_username=$OS_USERNAME"\
+      -var "openstack_password=$OS_PASSWORD"\
+      -var "openstack_project=$OS_PROJECT_NAME"\
+      -var "openstack_domain=$OS_USER_DOMAIN_NAME"\
+      -var "external_gateway=$(openstack network list --external -f value -c ID)" \
+      -var "pool=public" \
+      -var "tag_namespace=$USER-$APP" \
+      -var "tag_env=$ENV"
+
+    terraform outputs
+
+    # to decommision
+    terraform destroy
+
+Note you may want to run content in `main.tf` independently, as these you might want to share these or keep them for next
+execution.
+
+### If Container-Linux is used, compile ignition config first
+
+Documentation at: https://coreos.com/os/docs/latest/clc-examples.html
+
+    # update env
+    export ETCD_DISCOVERY_URL=$(curl -sSLqw "\n" 'https://discovery.etcd.io/new?size=3')
+
+    # prepopulate with external data + convert with ct
+    ls tf/openstack-habitat/conf/*.ign.yml | sed 's:\.yml::'|\
+      xargs -n1 -I% echo 'envtpl %.yml --keep-template --output-file /dev/stdout |\
+      ct -platform openstack-metadata -pretty -in-file /dev/stdin -out-file  %'
+
+## Contributing
+
+Community PR/Issues are warmly welcome.
+

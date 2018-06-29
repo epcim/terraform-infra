@@ -1,0 +1,31 @@
+
+# https://github.com/epcim/habitat-plans/
+
+etcd-name = "vault"
+etcd-auto-tls = "true"
+etcd-http-proto = "https"
+etcd-initial-cluster-token = "etcd-vault-cluster-1"
+
+#etcd-initial-cluster-state = "new"
+#etcd-env-vars-file = ""
+
+[pki]
+
+engine = "cfssl"
+
+  [pki.ca]
+  cn = "ca"
+
+  [pki.csr]
+  hosts  = []
+
+  [pki.csr.keys]
+  algo = "rsa"
+  size = 2048
+
+  [pki.csr.names]
+  C = "CZ"
+  L = "Prague"
+  O = "epcim"
+  OU = "etcd"
+
