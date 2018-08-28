@@ -33,6 +33,10 @@ resource "openstack_compute_instance_v2" "ctl" {
 
   #user_data = "${file("bootstrap.sh")}"
 
+  #depends_on = ["openstack_compute_keypair_v2.terraform"]
+
+  #availability_zone = "${var.zone}
+
 }
 
 
