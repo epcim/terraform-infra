@@ -8,6 +8,10 @@ Copy whole directory to new name and customize. Use instructions in README.md
 
 https://www.terraform.io/downloads.html
 
+    LATEST_TERRAFORM_VERISON=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r -M '.current_version')
+    curl "https://releases.hashicorp.com/terraform/${LATEST_TERRAFORM_VERISON}/terraform_${LATEST_TERRAFORM_VERISON}_linux_amd64.zip" --output /tmp/terraform_linux_amd64.zip
+    sudo unzip /tmp/terraform_linux_amd64.zip -d /usr/local/bin/
+
 ## With Habitat.sh
 
 https://www.habitat.sh/docs/install-habitat/
