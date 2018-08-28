@@ -1,7 +1,7 @@
 
 # Overivew
 
-Terraform plan for simple 3 node infrastructure with OpenStack provisioner.
+Terraform plan for simple 3 node infrastructure with OpenStack provider
 
 ## Tools required
 
@@ -70,7 +70,7 @@ Get IDs and Names of openstack objects
     openstack security group list
     ...
 
-And configure `variables.tf` and `provisioner.tf` as required.
+And configure `variables.tf` and `provider.tf` as required.
 
 ## Customize
 
