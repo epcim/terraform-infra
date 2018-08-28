@@ -28,10 +28,10 @@ plans() {
   # ORIGIN/FOLDER
   get habitat-builder/terraform                habitat-builder-aws
   get habitat-ci                               habitat-ci-aws
-  get kubespray contrib/terraform/aws          kubernetes-kubespray-aws
-  get kubespray contrib/terraform/openstack    kubernetes-kubespray-openstack
-  get mirantis-lab ansible/terraform/openstack mcplab-openstack
-  get mirantis-lab ansible/terraform/azure     mcplab-azure
+  get kubespray/contrib/terraform/aws          kubernetes-kubespray-aws
+  get kubespray/contrib/terraform/openstack    kubernetes-kubespray-openstack
+  get mirantis-lab/ansible/terraform/openstack mcplab-openstack
+  get mirantis-lab/ansible/terraform/azure     mcplab-azure
 
 
   # POST-FETCH CUSTOMIZATION
