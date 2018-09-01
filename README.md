@@ -29,3 +29,13 @@ https://www.habitat.sh/docs/install-habitat/
 The script `Syncfile` contains instructions to fetch 3rd party terraform plans to `upstream` branch
 and make them available in this repo for customization.
 
+
+# Sources
+
+Docs:
+- https://www.terraform.io/docs/index.html
+- https://www.hashicorp.com/blog/terraform-0-1-2-preview
+
+Modules:
+- https://registry.terraform.io/
+- https://github.com/epcim/terraform-modules
