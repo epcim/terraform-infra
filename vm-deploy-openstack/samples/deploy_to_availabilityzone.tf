@@ -19,7 +19,7 @@ resource "openstack_compute_instance_v2" "gpu" {
   key_pair        = "${var.tag_label}_tf"
 
   # mind other sec group: default, ...
-  security_groups = ["${openstack_compute_secgroup_v2.ssh_only.name}"]
+  security_groups = ["${openstack_compute_secgroup_v2.ssh_and_web.name}"]
 
   network {
     uuid = "${openstack_networking_network_v2.management.id}"
