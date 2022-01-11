@@ -12,8 +12,8 @@ declare -a FETCHED=()
 
 plans() {
   # GITREPO [-b BRANCH] ORIGIN
-  use https://github.com/echohack/on-prem-builder.git -b terraform habitat-builder
-  use https://github.com/habitat-sh/ci-terraform.git habitat-ci
+  #use https://github.com/echohack/on-prem-builder.git -b terraform habitat-builder
+  #use https://github.com/habitat-sh/ci-terraform.git habitat-ci
   use https://github.com/kubernetes-incubator/kubespray kubespray
   use https://github.com/Mirantis/training-lab mirantis-lab
 
@@ -26,8 +26,8 @@ plans() {
 
 
   # ORIGIN/FOLDER
-  get habitat-builder/terraform                habitat-builder-aws
-  get habitat-ci                               habitat-ci-aws
+  #get habitat-builder/terraform                habitat-builder-aws
+  #get habitat-ci                               habitat-ci-aws
   get kubespray/contrib/terraform/aws          kubernetes-kubespray-aws
   get kubespray/contrib/terraform/openstack    kubernetes-kubespray-openstack
   get mirantis-lab/ansible/terraform/openstack mcplab-openstack
