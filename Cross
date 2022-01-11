@@ -2,7 +2,9 @@
 
 # upstream sources
 use kubespray https://github.com/kubernetes-sigs/kubespray
+use kubespray2 https://github.com/kubernetes-sigs/kubespray
 #use mirantis https://github.com/Mirantis/training-lab
+use bill	https://github.com/billimek/k8s-gitops
 
 git remote -v | grep fetch | column -t
 
@@ -11,6 +13,8 @@ git remote -v | grep fetch | column -t
 
 # cross patches
 patch kubespray:/contrib/terraform/aws        k8s-kubespray-aws
+patch kubespray2:/contrib/terraform/aws        k8s/kubespray-aws
+patch bill:/logs                              deploy/logs
 
 # hooks, are custom fn for triggers run in git-cross
 cross_post_hook() {
