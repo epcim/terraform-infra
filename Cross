@@ -1,0 +1,30 @@
+#!/bin/bash
+
+## Opinionated 3rd party repo syncer
+## https://github.com/epcim/git-cross
+
+# upstream sources
+use kubespray https://github.com/kubernetes-incubator/kubespray
+use mirantis  https://github.com/Mirantis/training-lab
+
+git remote -v | grep fetch | column -t
+
+# stash?
+# repo_is_clean || say "There are uncommitted changes in the repository. Stash them first." 1
+
+# cross patches
+patch kubespray:contrib/terraform/aws        kubernetes-kubespray-aws
+patch kubespray:contrib/terraform/openstack  kubernetes-kubespray-openstack
+patch mirantis:ansible/terraform/openstack mcplab-openstack
+patch mirantis:ansible/terraform/azure     mcplab-azure
+
+# hooks, are custom fn for triggers run in git-cross
+cross_post_hook() {
+  ask "Update upstream?" N && {
+    echo "DOES NOTHING"
+  }
+}
+
+
+
+
