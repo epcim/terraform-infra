@@ -3,7 +3,7 @@ variable "dns_domain" { default="apealive.net"  }
 variable "ip_type" { default = "static" }
 
 # access
-variable "ssh_authorised_keys" {
+variable "ssh_authorized_keys" {
   type = list(string)
   default = []
 }

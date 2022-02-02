@@ -1,8 +1,12 @@
 # override values from variables.tf
-#additional_nic1 = "{{metal_lb_primary}}"
-#additional_nic2 = "{{metal_lb_secondary}}"
+#additional_nic1 = "TODO metal_lb_primary}}"
+#additional_nic2 = "TODO metal_lb_secondary}}"
 #
 
 # access
-ssh_authorised_keys =  {{admin_authorized_keys}}
+ssh_authorized_keys = [
+ {% for key in admin_authorized_keys %}
+ "{{key}}",
+ {% endfor %}
+]
 
